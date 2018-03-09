@@ -2,4 +2,4 @@
 torch_tuto/
 flask_tuto/
 frontend/data/
-bin/
+__pycache__/
