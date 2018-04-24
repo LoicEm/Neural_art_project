@@ -1,0 +1,19 @@
+div.scrollmenu {
+	width: 250px;
+    height: 150px;
+    background-color: #333;
+    overflow-y: auto;
+}
+
+div.scrollmenu a {
+	width: 100px;
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 6px;
+    text-decoration: none;
+}
+
+div.scrollmenu a:hover {
+    background-color: #777;
+}

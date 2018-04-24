@@ -3,9 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>image_name</title>
+    <link rel="stylesheet", type="text/css", href="{{url_for('static', filename='styles/scrollmenu.css')}}">
+
 </head>
 <body>
-<p></p>
-<p><img src="{{url_for('static', filename=image_name)}}"></p>
+    <div>
+        <div style="float:left; width=20%">
+        <p></p>
+        <p><img src="{{url_for('data_path', filename=image_name)}}", width="600"></p>
+        </div>
+        <div style="float:rigth;"><p>Choose a filter</p>
+            <div class="scrollmenu">
+                <a href="#home">Home</a>
+                <a href="#news">News</a>
+                <a href="#contact">Contact</a>
+                <a href="#about">About</a>
+                <a href="#support">Support</a>
+                <a href="#blog">Blog</a>
+                <a href="#tools">Tools</a>
+                <a href="#base">Base</a>
+                <a href="#custom">Custom</a>
+                <a href="#more">More</a>
+                <a href="#logo">Logo</a>
+                <a href="#friends">Friends</a>
+                <a href="#partners">Partners</a>
+                <a href="#people">People</a>
+                <a href="#work">Work</a>
+            </div>
+        </div>
+        <div style="clear:both"></div>
+
+    </div>
+
 </body>
 </html>

@@ -1,11 +1,18 @@
-from flask import Flask, request, redirect, url_for, flash, render_template
+from flask import Flask, request, redirect, url_for, flash, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 import os
-app = Flask(__name__, static_folder="data")
+app = Flask(__name__)
+
+
+@app.route('/data/<path:filename>')
+def data_path(filename):
+    return send_from_directory('data', filename)
+
 
 @app.route('/')
 def index():
     return 'Hello, choose your option'
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -22,7 +29,7 @@ def upload_file():
             return redirect(request.url)
         if file:
             filename = secure_filename(file.filename)
-            file.save(os.path.join("static/", filename))
+            file.save(os.path.join("data/", filename))
             return redirect(url_for('uploaded_file',
                                     filename=filename))
     return '''
@@ -34,6 +41,7 @@ def upload_file():
          <input type=submit value=Upload>
     </form>
     '''
+
 
 @app.route('/uploaded_file/<string:filename>')
 def uploaded_file(filename):
