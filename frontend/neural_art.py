@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, url_for, flash, render_template, sen
 from werkzeug.utils import secure_filename
 import os
 app = Flask(__name__)
+app.secret_key = "super secret key"
 
 
 @app.route('/data/<path:filename>')
@@ -11,7 +12,7 @@ def data_path(filename):
 
 @app.route('/')
 def index():
-    return 'Hello, choose your option'
+    return render_template("base.html")
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -19,7 +20,7 @@ def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
+            flash('No file selected')
             return redirect(request.url)
         file = request.files['file']
         # if user does not select file, browser also
@@ -29,21 +30,39 @@ def upload_file():
             return redirect(request.url)
         if file:
             filename = secure_filename(file.filename)
-            file.save(os.path.join("data/", filename))
+            file.save(os.path.join("data/content/", filename))
             return redirect(url_for('uploaded_file',
                                     filename=filename))
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
+    return render_template("upload_content.html")
 
 
-@app.route('/uploaded_file/<string:filename>')
+
+@app.route('/uploaded_file/<string:filename>', methods=['GET', 'POST'])
 def uploaded_file(filename):
     """Display an uploaded file"""
-    return render_template("display_image.html", image_name=filename)
+    print("load", request.method)
+    if request.method == 'POST':
+        print(request.form)
+        if "file" not in request.files:
+            flash("No file selected for upload")
+            return redirect(request.url)
+        file = request.files["file"]
+        if file.filename == '':
+                flash('No selected file')
+                return redirect(request.url)
+        if file:
+                filename = secure_filename(file.filename)
+                file.save(os.path.join("data/style/", filename))
+                return redirect(request.url)
+
+    style_pics = os.listdir('data/style')
+    return render_template("display_image.html", image_name=filename, style_pics=style_pics)
+
+# TODO : add a style scale bar
+# TODO : add option to upload your own style pic
+# TODO :
+
+
+@app.route('/result')
+def mixed_file():
+    pass
