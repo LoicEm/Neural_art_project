@@ -1,6 +1,8 @@
 from flask import Flask, request, redirect, url_for, flash, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 import os
+from frontend.forms import build_style_form
+
 app = Flask(__name__)
 app.secret_key = "super secret key"
 
@@ -56,9 +58,10 @@ def uploaded_file(filename):
                 return redirect(request.url)
 
     style_pics = os.listdir('data/style')
-    return render_template("display_image.html", image_name=filename, style_pics=style_pics)
+    styleform= build_style_form(style_pics, 'style/')
+    return render_template("display_image.html", image_name=filename, styleform=styleform)
 
-# TODO : add a style scale bar
+#
 # TODO : add option to upload your own style pic
 # TODO :
 

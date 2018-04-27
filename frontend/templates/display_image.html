@@ -9,24 +9,23 @@
 </head>
 <body>
     <div>
+
         <div style="float:left; width=35%">
-        <p></p>
+        <p>Your Image </p>
         <p><img src="{{url_for('data_path', filename='content/'+image_name)}}" width="600"></p>
         </div>
-        <div style="float:left; margin-left: 10px; width=35%"><p>Choose a filter</p>
 
-            <form method=post enctype="text/plain">
+        <div style="float:left; margin-left: 10px; width=35%">
+            <p>Choose a filter</p>
+            <form method=post>
                 <div class="scrollmenu">
-                    {% for pic in style_pics %}
-                        <label class="style_im">
-                            <input type="radio" name="{{pic}}"/>
-                            <img src="{{url_for('data_path', filename='style/'+pic)}}" width="230"/>
-                        </label>
+                    {% for subfield in styleform.images %}
+                            <td>{{subfield}}</td>
+                            <img src="{{url_for('data_path', filename=subfield.data)}}" width="230"/>
                     {% endfor %}
                     <!-- TODO: Resize or crop the images to have something nice-->
                 </div>
-                <div><p>Style Scale :<input type=text value="1.0"></p>
-                    <p><input type=submit value=Go></p></div>
+                <div><p>{{styleform.scale.label}}</p>{{styleform.scale}}</div>
             </form>
         </div>
 
@@ -35,8 +34,10 @@
               <p><input type=file name=file>
                  <input type=submit value=Upload>
               </p>
+            </form>
+        </form>
         </div>
-
+        <div style="clear:both"></div>
 </div>
 
 </body>
