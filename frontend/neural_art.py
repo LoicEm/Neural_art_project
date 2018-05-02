@@ -1,7 +1,7 @@
 from flask import Flask, request, redirect, url_for, flash, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 import os
-from frontend.forms import build_style_form
+from frontend.forms import build_style_form, upload_image_from_form
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
@@ -20,52 +20,42 @@ def index():
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file selected')
-            return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file:
-            filename = secure_filename(file.filename)
-            file.save(os.path.join("data/content/", filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+        return upload_image_from_form(request, 'content', 'uploaded')
+    # check if the post request has the file part
     return render_template("upload_content.html")
 
+@app.route('/content_gallery')
+def show_content_gallery():
+    content_pics = os.listdir('data/content')
+    return render_template("display_content_gallery.html", images=content_pics)
+
+@app.route('/style_gallery', methods=['GET', 'POST'])
+def show_style_gallery():
+    if request.method == 'POST':
+        return upload_image_from_form(request, 'style')
+    style_pics = os.listdir("data/style")
+    return render_template("display_style_gallery.html", images=style_pics)
 
 
 @app.route('/uploaded_file/<string:filename>', methods=['GET', 'POST'])
 def uploaded_file(filename):
     """Display an uploaded file"""
-    print("load", request.method)
     if request.method == 'POST':
-        print(request.form)
-        if "file" not in request.files:
-            flash("No file selected for upload")
-            return redirect(request.url)
-        file = request.files["file"]
-        if file.filename == '':
-                flash('No selected file')
-                return redirect(request.url)
-        if file:
-                filename = secure_filename(file.filename)
-                file.save(os.path.join("data/style/", filename))
-                return redirect(request.url)
-
+        # Make the separation between the two forms
+        if request.form['submit'] == "Upload":  # Form to upload style image
+            return upload_image_from_form(request, 'content')
+        elif request.form['submit'] == "Transform":
+            pass
     style_pics = os.listdir('data/style')
     styleform= build_style_form(style_pics, 'style/')
     return render_template("display_image.html", image_name=filename, styleform=styleform)
 
-#
-# TODO : add option to upload your own style pic
-# TODO :
+# TODO : Put it nicely
+# TODO : Preselect a style picture when it was just uploaded
 
 
 @app.route('/result')
 def mixed_file():
+
+    # TODO : add a "loading" button ? Or an interstitial page
     pass

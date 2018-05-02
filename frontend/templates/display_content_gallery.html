@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>image_name</title>
+    <link rel="stylesheet", type="text/css", href="{{url_for('static', filename='styles/scrollmenu.css')}}">
+
+</head>
+<body>
+    <div style="float:left; width=35%">
+        <p>uploaded images</p>
+        <div class="scrollmenu">
+            {% for im in images %}
+                <a href="{{url_for('uploaded_file', filename=im)}}"><img src="{{url_for('data_path', filename='content/'+im)}}" width="230"/></a>
+            {% endfor %}
+            <!-- TODO: Resize or crop the images to have something nice-->
+        </div>
+    </div>
+    <div style="float:left; width=35%">
+        Or you can <a href="/upload">upload your own</a>
+    </div>
+</body>
+
+{% endblock %}
