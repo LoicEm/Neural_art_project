@@ -26,8 +26,7 @@ def upload_image_from_form(request, type_image='style', redirect_url='same'):
         redirect_url = request.url
 
     if "file" not in request.files:
-        flash("No file selected for upload", 'error')
-        print('no flash ?')
+        flash("No file selected for upload", 'error') # TODO: comprendre pourquoi il n'y a pas de flas
         return redirect(request.url)
     file = request.files["file"]
 
