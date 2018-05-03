@@ -10,7 +10,7 @@
 <body>
     <div style="float:left; width=35%">
         <p>uploaded images</p>
-        <div class="scrollmenu">
+        <div class="scrollmenu" style="width:900px;height:800px">
             {% for im in images %}
                 <a href="{{url_for('uploaded_file', filename=im)}}"><img src="{{url_for('data_path', filename='content/'+im)}}" width="230"/></a>
             {% endfor %}
