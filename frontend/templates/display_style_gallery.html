@@ -12,12 +12,13 @@
         <p>uploaded images</p>
         <div class="scrollmenu" style="width:900px;height:800px">
             {% for im in images %}
-                <a href="{{url_for('data_path', filename='style/'+im)}}">
-                    <img src="{{url_for('data_path', filename='style/'+im)}}" width="230"/></a>
+                <a href="{{url_for('data_path', filename=folder+im)}}">
+                    <img src="{{url_for('data_path', filename=folder+im)}}" width="230"/></a>
             {% endfor %}
             <!-- TODO: Resize or crop the images to have something nice-->
         </div>
     </div>
+    {% if folder =='style/' %}
     <div style="float:left; margin-left: 10px; width=35%"><p>Or upload your own</p>
         <form method=post enctype=multipart/form-data>
             <p><input type=file name=file>
@@ -25,6 +26,7 @@
             </p>
         </form>
     </div>
+    {% endif %}
 </body>
 
 {% endblock %}

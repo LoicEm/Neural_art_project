@@ -2,12 +2,12 @@ import torch
 from torch.autograd import Variable
 
 
-import neural_transfer
-from neural_transfer.net import Net, Vgg16
+import neural_style.utils
+from neural_style.net import Net, Vgg16
 
 
 def neural_transform(content_image, style_image, output_image, style_size=256, content_size=256,
-                     style_scale=None, cuda=False, model='model/'):
+                     style_scale=None, cuda=False, model='backend/models/21styles.model'):
     """Copy of the eval function in main.py of the neural style module
         content_image : path to the content image
         content_size : width of the output image
@@ -17,11 +17,11 @@ def neural_transform(content_image, style_image, output_image, style_size=256, c
     if style_scale is not None:
         style_size = content_size * style_scale
 
-    content_image = neural_transfer.utils.tensor_load_rgbimage(content_image, size=content_size, keep_asp=True)
+    content_image = neural_style.utils.tensor_load_rgbimage(content_image, size=content_size, keep_asp=True)
     content_image = content_image.unsqueeze(0)
-    style = neural_transfer.utils.tensor_load_rgbimage(style_image, size=style_size)
+    style = neural_style.utils.tensor_load_rgbimage(style_image, size=style_size)
     style = style.unsqueeze(0)
-    style = neural_transfer.utils.preprocess_batch(style)
+    style = neural_style.utils.preprocess_batch(style)
 
     style_model = Net(ngf=128)
     style_model.load_state_dict(torch.load(model), False)
@@ -33,9 +33,9 @@ def neural_transform(content_image, style_image, output_image, style_size=256, c
 
     style_v = Variable(style)
 
-    content_image = Variable(neural_transfer.utils.preprocess_batch(content_image))
+    content_image = Variable(neural_style.utils.preprocess_batch(content_image))
     style_model.setTarget(style_v)
 
     output = style_model(content_image)
-    neural_transfer.utils.tensor_save_bgrimage(output.data[0], output_image, cuda)
+    neural_style.utils.tensor_save_bgrimage(output.data[0], output_image, cuda)
     return(output_image)

@@ -1,0 +1,4 @@
+flask>=0.12.2
+flask_wtf>=0.14.2
+
+torch==0.3.1
