@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import RadioField, FloatField, SubmitField
+from wtforms import RadioField, FloatField, IntegerField, SubmitField
 from flask import flash, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
@@ -8,6 +8,7 @@ import os
 class SelectStyleForm(FlaskForm):
     scale = FloatField("Choose a style image scale", default=1.0)
     images = RadioField('Choose a style image.', choices=[]) # Choices are to be determined later
+    size = IntegerField('Choose the width of the output image (max 512 pixels)', default=256)
     submit = SubmitField('Transform')
 
 
@@ -26,7 +27,7 @@ def upload_image_from_form(request, type_image='style', redirect_url='same'):
         redirect_url = request.url
 
     if "file" not in request.files:
-        flash("No file selected for upload", 'error') # TODO: comprendre pourquoi il n'y a pas de flas
+        flash("No file selected for upload", 'error')
         return redirect(request.url)
     file = request.files["file"]
 

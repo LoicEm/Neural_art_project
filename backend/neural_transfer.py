@@ -6,16 +6,15 @@ import neural_style.utils
 from neural_style.net import Net, Vgg16
 
 
-def neural_transform(content_image, style_image, output_image, style_size=256, content_size=256,
-                     style_scale=None, cuda=False, model='backend/models/21styles.model'):
+def neural_transform(content_image, style_image, output_image, content_size=256,
+                     style_scale=1.0, cuda=False, model='backend/models/21styles.model'):
     """Copy of the eval function in main.py of the neural style module
         content_image : path to the content image
         content_size : width of the output image
         style_image : size of the style image
         style_size : width of the style image"""
 
-    if style_scale is not None:
-        style_size = content_size * style_scale
+    style_size = int(content_size * style_scale)  # Round down to the nearest integer
 
     content_image = neural_style.utils.tensor_load_rgbimage(content_image, size=content_size, keep_asp=True)
     content_image = content_image.unsqueeze(0)
@@ -38,4 +37,4 @@ def neural_transform(content_image, style_image, output_image, style_size=256, c
 
     output = style_model(content_image)
     neural_style.utils.tensor_save_bgrimage(output.data[0], output_image, cuda)
-    return(output_image)
+    return output_image

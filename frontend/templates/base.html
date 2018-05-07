@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
     <link rel="stylesheet", type="text/css", href="{{url_for('static', filename='styles/scrollmenu.css')}}">
 </head>
 <body>
@@ -12,8 +11,21 @@
     <li><a href="/content_gallery">Content Images</a></li>
     <li><a href="/style_gallery">Style Images</a></li>
     <li><a href="/results_gallery">Results Gallery</a></li>
-    <li><a href="/help">Help</a></li>
 </ul>
+
+<div style="text-align: center">
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes style="color: aliceblue">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+</div>
+
+
 
     {% block content %}{% endblock %}
 </body>

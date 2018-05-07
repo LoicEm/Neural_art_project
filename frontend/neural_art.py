@@ -8,7 +8,13 @@ from backend.neural_transfer import neural_transform
 app = Flask(__name__)
 app.secret_key = "super secret key"
 
-subprocess.run(['firefox', 'http://0.0.0.0:5000/'])  # Open the correct adress
+# Check the conditions in which it opens a new browser tab
+distant_condition = ('FLASK_DISTANT' not in os.environ) or not (os.environ['FLASK_DISTANT'])
+debug_condition = ('FLASK_DEBUG' not in os.environ) or not (os.environ['FLASK_DEBUG'])
+
+
+if distant_condition and debug_condition : # If the app is not launched on a distant server
+    subprocess.run(['xdg-open', 'http://127.0.0.1:5000/'])  # Open the correct adress in the default browser
 
 @app.route('/data/<path:filename>')
 def data_path(filename):
@@ -17,8 +23,7 @@ def data_path(filename):
 
 @app.route('/')
 def index():
-    flash(u"Welcome !")
-    return render_template("base.html")
+    return render_template("home.html")
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -51,17 +56,21 @@ def show_results_gallery():
 @app.route('/uploaded_file/<string:filename>', methods=['GET', 'POST'])
 def uploaded_file(filename):
     """Display an uploaded file"""
-    if request.method == 'POST':
+    if request.method == 'POST': # When a form is filled it sends a POST request
+
         # Make the separation between the two forms
         if request.form['submit'] == "Upload":  # Form to upload style image
             return upload_image_from_form(request, 'content')
-        elif request.form['submit'] == "Transform":
+
+        elif request.form['submit'] == "Transform": # Form to launch style transfer
             style_pic = request.form['images']
             transform_name = '+'.join(i.split('/')[-1].split('.')[0] for i in [style_pic, filename]) + '.jpg'
             transform_path = 'data/results/' + transform_name
-            flash("Starting transformation, wait a minute...")
-            print('data/content/' + filename, request.form['images'], transform_path)
-            neural_transform('data/content/' + filename, 'data/' + request.form['images'], transform_path)
+            size_transform = min(512, int(request.form['size']))
+
+            # Make the transformation
+            neural_transform('data/content/' + filename, 'data/' + request.form['images'],
+                             transform_path, content_size=size_transform, style_scale=float(request.form['scale']))
             return redirect(url_for('results', filename=transform_name))
     style_pics = os.listdir('data/style')
     styleform= build_style_form(style_pics, 'style/')
@@ -76,4 +85,3 @@ def uploaded_file(filename):
 def results(filename):
     print('went there')
     return render_template("display_result.html", filename=filename)
-    # TODO : add a "loading" button ? Or an interstitial page

@@ -2,16 +2,21 @@
 
 {% block content %}
 
-<h1>Upload new File</h1>
+<head>
+    <title>Upload a file</title>
+</head>
 
-<div>
+
+<div style="text-align: center; margin-top: 8em">
+    <h1>Upload a new file</h1>
     <form method=post enctype=multipart/form-data>
       <p><input type=file name=file>
          <input type=submit value=Upload>
       </p>
     </form>
+    <div>If your file was already uploaded, you can
+        <a href="/content_gallery"> choose from gallery</a></div>
 </div>
 
-<div><a href="/content_gallery"> Choose from gallery</a></div>
 
 {% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="margin-top: 5em;text-align: center">
+    <p>Welcome to my Neural Style Transfer app !</p>
+
+    <div style="margin-top: 2em">
+        <img src="{{url_for('data_path', filename='content/venice-boat.jpg')}}" width="256px">
+        +
+        <img src="{{url_for('data_path', filename='style/starry_night.jpg')}}" width="256px">
+        <p>=</p>
+
+        <p><img src="{{url_for('data_path', filename='results/starry_night+venice-boat.jpg')}}" width="256px"></p>
+    </div>
+
+    <div style="margin-top: 2em">You can :
+        <p><a href="/upload">Upload your own picture and transform it</a></p>
+        <p><a href="/content_gallery">Choose a picture to transform from the gallery</a></p>
+        <p><a href="/results_gallery">Check the already transformed pictures</a></p>
+    </div>
+</div>
+
+{% endblock %}
